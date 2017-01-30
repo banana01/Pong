@@ -28,12 +28,12 @@ public class Pong extends Canvas implements KeyListener, Runnable
 	public Pong(int w, int h)
 	{
 		//set up all variables related to the game
-		size = new Dimension(w-50, h-0);
+		size = new Dimension(w-50, h-50);
 		ball = new Ball((int)size.getWidth()/2,(int) size.getHeight()/2, 5,5,Color.red,1 , 1);
 		
-		rightPaddle = new Paddle((int)size.getWidth()-10, (int)size.getHeight()/2, 10, 50, Color.black, 5);
-		leftPaddle = new Paddle((int)size.getWidth()-((int)size.getWidth()-10),(int)size.getHeight()/2, 10, 50 , Color.black, 5);
-		ball.setXSpeed(2);
+		rightPaddle = new Paddle((int)size.getWidth()-10, (int)size.getHeight()/2, 10, 50, Color.black, 2);
+		leftPaddle = new Paddle((int)size.getWidth()-((int)size.getWidth()-10),(int)size.getHeight()/2, 10, 50 , Color.black, 2);
+		ball.setXSpeed(-2);
 		ball.setYSpeed(1);
 
 		keys = new boolean[4];
@@ -94,8 +94,46 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
 
 		//see if the ball hits the left paddle
-
-		
+		if
+		(
+				ball.getX() == leftPaddle.getX()+leftPaddle.getWidth()+Math.abs(ball.getXSpeed()) && 
+				(
+						ball.getY() >= leftPaddle.getY() && 
+						ball.getY() <= leftPaddle.getY()+leftPaddle.getHeight() || 
+						ball.getY() + ball.getHeight() >= leftPaddle.getY() && 
+						ball.getY() + ball.getHeight() < leftPaddle.getY() + leftPaddle.getHeight()
+				)
+		)
+		{
+			if(ball.getX() <= leftPaddle.getX()+leftPaddle.getWidth()-Math.abs(ball.getXSpeed()))
+			{
+				ball.setYSpeed(-ball.getYSpeed());
+			}
+			else 
+			{
+				ball.setXSpeed(-ball.getXSpeed());
+			}
+		}
+		if
+		(
+				ball.getX() == rightPaddle.getX()-rightPaddle.getWidth()-Math.abs(ball.getXSpeed()) && 
+				(
+						ball.getY() >= rightPaddle.getY() && 
+						ball.getY() <= rightPaddle.getY()+rightPaddle.getHeight() || 
+						ball.getY() + ball.getHeight() >= rightPaddle.getY() && 
+						ball.getY() + ball.getHeight() < rightPaddle.getY() + rightPaddle.getHeight()
+				)
+		)
+		{
+			if(ball.getX() <= rightPaddle.getX()-rightPaddle.getWidth()+Math.abs(ball.getXSpeed()))
+			{
+				ball.setYSpeed(-ball.getYSpeed());
+			}
+			else 
+			{
+				ball.setXSpeed(-ball.getXSpeed());
+			}
+		}
 		//see if the ball hits the right paddle
 		
 		
