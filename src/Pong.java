@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 
 public class Pong extends Canvas implements KeyListener, Runnable
 {
+	private int leftScore, rightScore;
 	private Ball ball;
 	private Paddle leftPaddle;
 	private Paddle rightPaddle;
@@ -33,7 +34,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
 		
 		rightPaddle = new Paddle((int)size.getWidth()-10, (int)size.getHeight()/2, 10, 50, Color.black, 2);
 		leftPaddle = new Paddle((int)size.getWidth()-((int)size.getWidth()-10),(int)size.getHeight()/2, 10, 50 , Color.black, 2);
-		ball.setXSpeed(-2);
+		ball.setXSpeed(2);
 		ball.setYSpeed(1);
 
 		keys = new boolean[4];
@@ -70,14 +71,19 @@ public class Pong extends Canvas implements KeyListener, Runnable
 		ball.moveAndDraw(graphToBack);
 		leftPaddle.draw(graphToBack);
 		rightPaddle.draw(graphToBack);
-
-
-		//see if ball hits left wall or right wall
-		//if(!(ball.getX()>=10 && ball.getX()<=780))
-	//	{
-	//		ball.setXSpeed(0);
-	//		ball.setYSpeed(0);
-	//	}
+		if(!(ball.getX()<=(int)size.getWidth()-10 && ball.getX()>=(int)size.getWidth()-((int)size.getWidth()-10)))
+		{
+			ball.setXSpeed(0);
+			ball.setYSpeed(0);
+			Color c = graphToBack.getColor();
+			graphToBack.setColor(Color.white);
+			graphToBack.fillRect(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
+			graphToBack.setColor(c);
+			ball.setPos((int)size.getWidth()/2, (int) size.getHeight()/2);
+			
+			ball.setXSpeed((int)Math.ceil(Math.random()*2));
+			ball.setYSpeed((int)Math.ceil(Math.random()*2));
+		}
 
 		
 		//see if the ball hits the top or bottom wall 
@@ -86,6 +92,14 @@ public class Pong extends Canvas implements KeyListener, Runnable
 			ball.setXSpeed(-ball.getXSpeed());
 		}
 		*/
+		if(ball.getX() < (int)size.getWidth()-((int)size.getWidth()-10))
+		{
+			setRightScore(getRightScore()+1);
+		}
+		if(ball.getX() > (int)size.getWidth()-10)
+		{
+			setLeftScore(getLeftScore()+1);
+		}
 		if(!(ball.getY() >= size.getHeight()-(size.getHeight()-15) && ball.getY() <= size.getHeight()-15))
 		{
 			ball.setYSpeed(-ball.getYSpeed());
@@ -93,8 +107,43 @@ public class Pong extends Canvas implements KeyListener, Runnable
 
 
 
-		//see if the ball hits the left paddle
+
 		if
+		(
+				(ball.getX() >= leftPaddle.getX()+leftPaddle.getWidth()-10 && ball.getX() <= leftPaddle.getX()+leftPaddle.getWidth()) &&
+				(ball.getY() >= leftPaddle.getY() && ball.getY() <= leftPaddle.getY()+leftPaddle.getHeight())
+		)
+		{
+			System.out.println("yes");
+			if(ball.getX() <= leftPaddle.getX()+leftPaddle.getWidth()-Math.abs(ball.getXSpeed()))
+			{
+				ball.setYSpeed(-ball.getYSpeed());
+			}
+			else 
+			{
+				ball.setXSpeed(-ball.getXSpeed());
+			}
+			
+		}
+
+		if
+		(
+				((ball.getX() >= rightPaddle.getX()-2 && ball.getX() <= rightPaddle.getX()+5)) &&
+				(ball.getY() >= rightPaddle.getY() && ball.getY() <= rightPaddle.getY()+rightPaddle.getHeight())
+		)
+		{
+			System.out.println("yes");
+			if(ball.getX() >= rightPaddle.getX()+Math.abs(ball.getXSpeed()))
+			{
+				ball.setYSpeed(-ball.getYSpeed());
+			}
+			else 
+			{
+				ball.setXSpeed(-ball.getXSpeed());
+			}
+			
+		}
+		/*if
 		(
 				ball.getX() == leftPaddle.getX()+leftPaddle.getWidth()+Math.abs(ball.getXSpeed()) && 
 				(
@@ -133,8 +182,7 @@ public class Pong extends Canvas implements KeyListener, Runnable
 			{
 				ball.setXSpeed(-ball.getXSpeed());
 			}
-		}
-		//see if the ball hits the right paddle
+		}*/
 		
 		
 		
@@ -201,8 +249,30 @@ public class Pong extends Canvas implements KeyListener, Runnable
 	}
 
 	public void keyTyped(KeyEvent e){}
+	public int getLeftScore()
+	{
+		return leftScore;
+	}
 	
-   public void run()
+   
+	public int getRightScore()
+	{
+		return rightScore;
+	}
+
+	
+	public void setRightScore(int rightScore)
+	{
+		this.rightScore = rightScore;
+	}
+
+	
+	public void setLeftScore(int leftScore)
+	{
+		this.leftScore = leftScore;
+	}
+
+public void run()
    {
    	try
    	{
